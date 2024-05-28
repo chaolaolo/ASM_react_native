@@ -1,0 +1,147 @@
+import { StyleSheet, View, Text, SafeAreaView, Image, TextInput, Button, ImageBackground, TouchableOpacity, Platform } from 'react-native'
+import * as React from 'react'
+
+const SignIn = ({navigation}:any) => {
+  return (
+
+    <View style={st.bgr}>
+      <SafeAreaView style={st.all}>
+        <Image source={require('./image/logo.png')} style={st.logo} />
+        <Text style={{
+          fontFamily: 'monospace',
+          marginVertical: 10,
+        }}>WELCOME! Login to continue</Text>
+        <View style={st.ifno_container}>
+          <View style={st.box_info}>
+            <Image
+              style={st.icon}
+              source={{ uri: 'https://cdn4.iconfinder.com/data/icons/social-media-logos-6/512/112-gmail_email_mail-512.png' }} >
+            </Image>
+            <TextInput style={st.tip}
+              placeholder='Enter email'
+              textContentType='emailAddress'
+              keyboardType='email-address'
+            >
+            </TextInput>
+          </View>
+          <View style={st.box_info}>
+            <Image
+              style={st.icon}
+              source={{ uri: 'https://songsofsyx.com/wiki/images/9/9e/Lock_icon.png' }}  >
+            </Image>
+            <TextInput style={st.tip}
+              placeholder='Enter password'
+              textContentType='password'
+            >
+            </TextInput>
+          </View>
+          <TouchableOpacity style={st.btnSignIn} onPress={()=>{navigation.navigate('Home')}}>
+            <Text style={st.t_signIn}>Sign In</Text>
+          </TouchableOpacity>
+          {/* <View style={st.btnSignIn}>
+            <Button title='Sign In'>
+            </Button>
+          </View> */}
+        </View>
+        <View>
+          <View style={st.t_left}>
+            <Text style={st.t1}>Don't have an account? </Text>
+            <Text style={st.t2} onPress={()=>navigation.navigate('SignUp')}>Sign Up</Text>
+          </View>
+          <View style={st.t_left}>
+            <Text style={st.t1}>Forget password? </Text>
+            <Text style={st.t2}>Reset</Text>
+          </View>
+        </View>
+
+
+      </SafeAreaView></View>
+
+  )
+}
+
+export default SignIn
+const st = StyleSheet.create({
+  bgr: {
+    flex: 1,
+    backgroundColor: '#DBE5FD'
+  },
+  all: {
+    // backgroundColor: 'green',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  logo: {
+    width: '50%',
+    height: '20%',
+    resizeMode: 'center',
+  },
+  welcome: {
+    color: "black",
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    fontFamily: Platform.OS === 'ios' ? 'Helvetica Neue' : 'monospace',
+  },
+  ifno_container: {
+    marginTop: '4%',
+  },
+  box_info: {
+    // backgroundColor: 'darkgray',
+    width: '80%',
+    height: 60,
+    marginVertical: 6,
+    flexDirection: 'row',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+  },
+  icon: {
+    width: '10%',
+    height: '55%',
+    marginVertical: 'auto',
+    margin: '3%',
+  },
+  tip: {
+    // backgroundColor: 'darkgray',
+    width: '84%',
+    height: '80%',
+    marginVertical: 'auto',
+    marginRight: 8,
+    fontSize: 16,
+    padding: 10,
+    borderBottomWidth: 1,
+    fontFamily: 'monospace',
+    borderBottomColor: 'gray'
+  },
+  btnSignIn: {
+    height: '16%',
+    marginTop: 14,
+    backgroundColor: '#FF520D',
+    padding: 10,
+    borderRadius: 30,
+  },
+  t_signIn: {
+    color: 'white',
+    fontSize: 20,
+    margin: 'auto',
+    fontFamily: 'monospace',
+    fontWeight: 'bold'
+  },
+  t_left: {
+    flexDirection: 'row',
+    marginHorizontal: 'auto',
+  },
+  t1: {
+    color: 'black',
+    fontFamily: 'monospace',
+    fontSize: 16
+  },
+  t2: {
+    color: '#FF520D',
+    fontFamily: 'monospace',
+    fontSize: 16
+  },
+});
