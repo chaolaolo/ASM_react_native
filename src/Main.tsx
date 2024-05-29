@@ -13,6 +13,8 @@ import Notification from './Notification';
 import ProductDetail from './ProductDetail';
 import Contact from './Contact';
 import Payment from './Payment';
+import Setting from './Setting';
+import PersonalDetail from './PersonalDetail';
 
 const stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -102,6 +104,8 @@ const Main = () => {
                 <stack.Screen name="SignUp" component={SignUp} />
                 <stack.Screen name="ProductDetail" component={ProductDetail} />
                 <stack.Screen name="Payment" component={Payment} />
+                <stack.Screen name="Setting" component={Setting} />
+                <stack.Screen name="PersonalDetail" component={PersonalDetail} />
             </stack.Navigator>
         </NavigationContainer>
     )

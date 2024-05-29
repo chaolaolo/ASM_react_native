@@ -55,17 +55,21 @@ const Cart = () => {
   //=====================
   return (
     <SafeAreaView style={st.container}>
-      <Pressable style={st.head}>
-        <Image source={require('./image/menuIcon.png')} style={st.person} />
-        <Text style={{ fontSize: 26, fontWeight: 'bold', color: 'black' }}>Cart</Text>
-        <Image source={require('./image/personIcon.png')} style={st.person} />
-      </Pressable>
+      <View style={st.head}>
+        <Pressable onPress={()=>navigation.navigate('Setting')}>
+          <Image source={require('./image/iconSetting.png')} style={st.person} />
+        </Pressable>
+        <Text style={{ fontSize: 26, fontWeight: 'bold', color: 'black' }}>Home</Text>
+        <Pressable>
+          <Image source={require('./image/personIcon.png')} style={st.person} />
+        </Pressable>
+      </View>
       <FlatList
         data={Prod1}
         renderItem={renderProd}
         keyExtractor={item => item.id}
         style={st.prod}
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: '40%' }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: '40%',backgroundColor: 'white',paddingLeft:'4%' }}
       />
       <View style={st.boxPay}>
         <View style={st.leftPay}>
@@ -79,7 +83,7 @@ const Cart = () => {
             }}>1000</Text>
           </View>
         </View>
-        <Pressable onPress={()=>navigation.navigate('Payment')} style={st.pressPay}><Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold' }}>Pay</Text></Pressable>
+        <Pressable onPress={() => navigation.navigate('Payment')} style={st.pressPay}><Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold' }}>Pay</Text></Pressable>
       </View>
     </SafeAreaView>
 
@@ -89,23 +93,22 @@ const Cart = () => {
 export default Cart
 const st = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'white'
+    flex: 1,    
   },
   head: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingHorizontal: '5%',
+    paddingVertical: '3%'
   },
   person: {
     width: 50,
     height: 50,
     backgroundColor: '#E9E9E9',
-    margin: '5%',
     borderRadius: 50,
   },
   prod: {
-    paddingLeft: '4%',
     flex: 1,
   },
   itemProduct: {

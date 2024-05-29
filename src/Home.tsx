@@ -34,8 +34,8 @@ const Home = () => {
 
     getCategory();
   }, []);
-  
-  const handleCategoryPress = async (id:any) => {
+
+  const handleCategoryPress = async (id: any) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setSelectedCategoryId(id);
     try {
@@ -122,18 +122,22 @@ const Home = () => {
     )
   }
 
-  
+
 
   // -------------------------------------------------------
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={st.container}>
       <StatusBar translucent={false} />
       <SafeAreaView style={st.container}>
-        <Pressable style={st.head}>
-          <Image source={require('./image/menuIcon.png')} style={st.person} />
+        <View style={st.head}>
+          <Pressable onPress={()=>navigation.navigate('Setting')}>
+            <Image source={require('./image/iconSetting.png')} style={st.person} />
+          </Pressable>
           <Text style={{ fontSize: 26, fontWeight: 'bold', color: 'black' }}>Home</Text>
-          <Image source={require('./image/personIcon.png')} style={st.person} />
-        </Pressable>
+          <Pressable>
+            <Image source={require('./image/personIcon.png')} style={st.person} />
+          </Pressable>
+        </View>
         <ScrollView contentContainerStyle={st.boxProduct}>
           <Text style={st.slogan}>
             Find the best Watch for you
@@ -201,18 +205,18 @@ export default Home
 const st = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   head: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingHorizontal:'5%',
+    paddingVertical:'3%'
   },
   person: {
     width: 50,
     height: 50,
     backgroundColor: '#E9E9E9',
-    margin: '5%',
     borderRadius: 50,
   },
   slogan: {
@@ -266,6 +270,7 @@ const st = StyleSheet.create({
   },
   boxProduct: {
     paddingBottom: 100,
+    backgroundColor: 'white',
   },
   prod: {
     paddingLeft: '4%',

@@ -2,16 +2,22 @@ import { Image, KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, Te
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 const Contact = () => {
+    const navigation = useNavigation();
     const [showSendModal, setshowSendModal] = useState(false);
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flexGrow: 1 }}>
-            <Pressable style={st.head}>
-                <Image source={require('./image/menuIcon.png')} style={st.person} />
+            <View style={st.head}>
+                <Pressable onPress={()=>navigation.navigate('Setting')}>
+                    <Image source={require('./image/iconSetting.png')} style={st.person} />
+                </Pressable>
                 <Text style={{ fontSize: 26, fontWeight: 'bold', color: 'black' }}>Contact</Text>
-                <Image source={require('./image/personIcon.png')} style={st.person} />
-            </Pressable>
+                <Pressable>
+                    <Image source={require('./image/personIcon.png')} style={st.person} />
+                </Pressable>
+            </View>
             <SafeAreaView style={st.container}>
                 <View style={st.boxContact}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: '4%' }}>
@@ -101,13 +107,14 @@ const st = StyleSheet.create({
     head: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingHorizontal: '5%',
+        paddingVertical: '3%'
     },
     person: {
         width: 50,
         height: 50,
         backgroundColor: '#E9E9E9',
-        margin: '5%',
         borderRadius: 50,
     },
 

@@ -22,58 +22,62 @@ const Favourite = () => {
     const navigation = useNavigation();
 
     const Product = ({ brand, name, price, image }: any) => (
-            <View style={st.itemProduct}>
-                <View style={st.Left}>
-                    <Image source={image} style={st.imageProduct} />
-                    <TouchableOpacity style={st.like}><Image source={require('./image/iconLikeRed.png')} style={st.likeIcon} /></TouchableOpacity>
-                </View>
-                <View style={st.Right}>
-                    <Text style={st.brandProduct}>{brand}</Text>
-                    <Text style={st.titleProduct} numberOfLines={2}>{name}</Text>
-                    <View style={{ flexDirection: 'row', }}>
-                        <Text style={{ color: 'orange', fontSize: 20, marginRight: 4 }}>$</Text>
-                        <Text style={st.priceProduct}>{price}</Text>
-                    </View>
-                    <TouchableOpacity style={st.AddToCart}><Text style={st.txtAddToCart}>Add To Cart</Text></TouchableOpacity>
-                </View>
-
+        <View style={st.itemProduct}>
+            <View style={st.Left}>
+                <Image source={image} style={st.imageProduct} />
+                <TouchableOpacity style={st.like}><Image source={require('./image/iconLikeRed.png')} style={st.likeIcon} /></TouchableOpacity>
             </View>
+            <View style={st.Right}>
+                <Text style={st.brandProduct}>{brand}</Text>
+                <Text style={st.titleProduct} numberOfLines={2}>{name}</Text>
+                <View style={{ flexDirection: 'row', }}>
+                    <Text style={{ color: 'orange', fontSize: 20, marginRight: 4 }}>$</Text>
+                    <Text style={st.priceProduct}>{price}</Text>
+                </View>
+                <TouchableOpacity style={st.AddToCart}><Text style={st.txtAddToCart}>Add To Cart</Text></TouchableOpacity>
+            </View>
+
+        </View>
     );
     const renderProd = ({ item }: any) => {
         return (
-          <Pressable onPress={() => navigation.navigate('ProductDetail', { item })}>
-             <View style={st.itemProduct}>
-                <View style={st.Left}>
-                    <Image source={item.image} style={st.imageProduct} />
-                    <TouchableOpacity style={st.like}><Image source={require('./image/iconLikeRed.png')} style={st.likeIcon} /></TouchableOpacity>
-                </View>
-                <View style={st.Right}>
-                    <Text style={st.brandProduct}>{item.brand}</Text>
-                    <Text style={st.titleProduct} numberOfLines={2}>{item.name}</Text>
-                    <View style={{ flexDirection: 'row', }}>
-                        <Text style={{ color: 'orange', fontSize: 20, marginRight: 4 }}>$</Text>
-                        <Text style={st.priceProduct}>{item.price}</Text>
+            <Pressable onPress={() => navigation.navigate('ProductDetail', { item })}>
+                <View style={st.itemProduct}>
+                    <View style={st.Left}>
+                        <Image source={item.image} style={st.imageProduct} />
+                        <TouchableOpacity style={st.like}><Image source={require('./image/iconLikeRed.png')} style={st.likeIcon} /></TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={st.AddToCart}><Text style={st.txtAddToCart}>Add To Cart</Text></TouchableOpacity>
-                </View>
+                    <View style={st.Right}>
+                        <Text style={st.brandProduct}>{item.brand}</Text>
+                        <Text style={st.titleProduct} numberOfLines={2}>{item.name}</Text>
+                        <View style={{ flexDirection: 'row', }}>
+                            <Text style={{ color: 'orange', fontSize: 20, marginRight: 4 }}>$</Text>
+                            <Text style={st.priceProduct}>{item.price}</Text>
+                        </View>
+                        <TouchableOpacity style={st.AddToCart}><Text style={st.txtAddToCart}>Add To Cart</Text></TouchableOpacity>
+                    </View>
 
-            </View>
-          </Pressable>
+                </View>
+            </Pressable>
         )
-      }
+    }
     return (
         <SafeAreaView style={st.container}>
-            <Pressable style={st.head}>
-                <Image source={require('./image/menuIcon.png')} style={st.person} />
-                <Text style={{ fontSize: 26, fontWeight: 'bold', color: 'black' }}>Favourite</Text>
-                <Image source={require('./image/personIcon.png')} style={st.person} />
-            </Pressable>
+            <View style={st.head}>
+                <Pressable onPress={()=>navigation.navigate('Setting')}>
+                    <Image source={require('./image/iconSetting.png')} style={st.person} />
+                </Pressable>
+                <Text style={{ fontSize: 26, fontWeight: 'bold', color: 'black' }}>Home</Text>
+                <Pressable>
+                    <Image source={require('./image/personIcon.png')} style={st.person} />
+                </Pressable>
+            </View>
             <FlatList
                 data={Prod1}
                 renderItem={renderProd}
                 keyExtractor={item => item.id}
                 style={st.prod}
-                contentContainerStyle={{ flexGrow: 1, paddingBottom: '20%' }}
+                contentContainerStyle={{ flexGrow: 1, paddingBottom: '20%',backgroundColor: 'white',paddingLeft:'4%' }}
             />
         </SafeAreaView>
 
@@ -84,22 +88,21 @@ export default Favourite
 const st = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
     },
     head: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingHorizontal: '5%',
+        paddingVertical: '3%'
     },
     person: {
         width: 50,
         height: 50,
         backgroundColor: '#E9E9E9',
-        margin: '5%',
         borderRadius: 50,
     },
     prod: {
-        paddingLeft: '4%',
         flex: 1,
     },
     itemProduct: {

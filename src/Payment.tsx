@@ -12,13 +12,16 @@ const Payment = () => {
                 <Pressable onPress={() => navigation.goBack()}>
                     <Image source={require('./image/iconBack.png')} style={st.back} />
                 </Pressable>
-                <Text style={{ fontSize: 26, fontWeight: 'bold', color: 'black', textAlign: 'center', flex: 1 }}>Home</Text>
+                <Text style={{ fontSize: 26, fontWeight: 'bold', color: 'black', textAlign: 'center', flex: 1 }}>Payment</Text>
             </View>
-            <ScrollView>
+            <ScrollView style={{ backgroundColor: 'white' }}>
                 <View style={st.boxCreditCard}>
                     <Text style={st.titleCreditCard}>Credit Card</Text>
-                    {/* <View style={st.boxCard}> */}
-                    <LinearGradient colors={['black', 'green']} style={st.boxCard}>
+                    <LinearGradient
+                        colors={['#2AB381', '#0C0F14']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={st.boxCard}>
                         <View style={st.topCard}>
                             <Image source={require('./image/iconChipCard.png')} />
                             <Image source={require('./image/iconVisa.png')} />
@@ -26,21 +29,41 @@ const Payment = () => {
                         <Text style={st.cardNumber}>3 4 2 1  4 5 0 9  8 9 2 8 3  8 8 3 2</Text>
                         <View style={st.bottomCard}>
                             <View style={st.leftCard}>
-
+                                <Text style={{ fontSize: 12, color: '#B6B6B6' }}>Card Holder Name</Text>
+                                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>Nguyen Van A</Text>
                             </View>
                             <View style={st.rightCard}>
-
+                                <Text style={{ fontSize: 12, color: '#B6B6B6' }}>Expiry Date</Text>
+                                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>02/30</Text>
                             </View>
                         </View>
                     </LinearGradient>
-                    {/* </View> */}
+                </View>
+                <View style={st.boxPayMethods}>
+                    <View style={st.payMethod}>
+                        <Image source={require('./image/iconWallet.png')} />
+                        <Text style={st.txtPayMethod}>Wallet</Text>
+                        <Text style={{ color: 'black', fontWeight: '500', textAlign: 'right', fontSize: 16 }}>$ 1000</Text>
+                    </View>
+                    <View style={st.payMethod}>
+                        <Image source={require('./image/iconCash.png')} />
+                        <Text style={st.txtPayMethod}>Pay By Cash</Text>
+                    </View>
+                    <View style={st.payMethod}>
+                        <Image source={require('./image/iconZaloPay.png')} />
+                        <Text style={st.txtPayMethod}>Zalo Pay</Text>
+                    </View>
+                    <View style={st.payMethod}>
+                        <Image source={require('./image/iconGooglePay.png')} />
+                        <Text style={st.txtPayMethod}>Google Pay</Text>
+                    </View>
                 </View>
             </ScrollView>
             <View style={st.boxPay}>
                 <View style={st.leftPay}>
                     <Text style={{ color: 'black' }}>Price</Text>
                     <View style={{ flexDirection: 'row', flex: 1, }}>
-                        <Text style={{ color: 'orange', fontSize: 24, marginRight: 4 }}>$</Text>
+                        <Text style={{ color: 'orange', fontSize: 24, marginRight: 4, fontWeight: 'bold', textAlignVertical: 'center' }}>$</Text>
                         <Text numberOfLines={1} style={{
                             fontSize: 24,
                             fontWeight: 'bold',
@@ -48,7 +71,7 @@ const Payment = () => {
                         }}>1000</Text>
                     </View>
                 </View>
-                <Pressable style={st.pressPay}><Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold' }}>Pay</Text></Pressable>
+                <Pressable style={st.pressPay}><Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold', }}>Pay by Cash</Text></Pressable>
             </View>
         </SafeAreaView>
 
@@ -96,8 +119,6 @@ const st = StyleSheet.create({
     },
     boxCard: {
         borderRadius: 20,
-        borderWidth: 2,
-        // borderColor: 'green',
         flex: 1,
         marginBottom: '2%',
         marginHorizontal: '3%'
@@ -109,22 +130,52 @@ const st = StyleSheet.create({
         paddingTop: '4%'
     },
     cardNumber: {
-        fontSize:18,
-        color:'white',
-        alignSelf:'center',
-        justifyContent:'center'
+        fontSize: 18,
+        color: 'white',
+        textAlignVertical: 'center',
+        flex: 1,
+        paddingLeft: '4%',
+        textAlign: 'left'
     },
     bottomCard: {
-        flexDirection:'row',
-        paddingHorizontal:'4%',
-        paddingBottom:'3%',
-        zIndex:4
+        width: '100%',
+        flexDirection: 'row',
+        paddingHorizontal: '4%',
+        paddingVertical: '4%',
+        alignSelf: 'flex-end',
     },
-    leftCard: {},
-    rightCard: {},
+    leftCard: {
+        flex: 1,
+    },
+    rightCard: {
+        flex: 1,
+        alignItems: 'flex-end',
+    },
 
-
-
+    boxPayMethods: {
+        marginHorizontal: '5%',
+        marginVertical: '2%',
+        // backgroundColor: 'gray'
+    },
+    payMethod: {
+        flexDirection: 'row',
+        borderRadius: 30,
+        borderWidth: 1,
+        borderColor: 'green',
+        marginVertical: '2%',
+        paddingHorizontal: '4%',
+        paddingVertical: '2%',
+        alignItems: 'center'
+        // justifyContent:'space-between'
+    },
+    txtPayMethod: {
+        color: 'black',
+        textAlign: 'left',
+        fontSize: 20,
+        fontWeight: '500',
+        marginLeft: '3%',
+        flex: 1
+    },
 
     boxPay: {
         position: 'absolute',
