@@ -1,34 +1,134 @@
-import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity, Image, TextInput, FlatList, Dimensions, ScrollView, Pressable, Touchable } from 'react-native'
-import React from 'react'
+import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity, Image, TextInput, FlatList, Dimensions, ScrollView, Pressable, Touchable, Alert, RefreshControl } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LinearGradient from 'react-native-linear-gradient';
+import Header from './Header';
 
 const { width, height } = Dimensions.get('window');
 const Cart = () => {
-
-  const Prod1 = [
-    { id: '1', brand: 'Rolex', name: 'Watch 1', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod4.png'), rate: 5, address: 'Ha Noi', rateCount: 1290, quantity: 1 },
-    { id: '2', brand: 'Rolex', name: 'Watch 2', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod3.png'), rate: 5, address: 'Ha Noi', rateCount: 423, quantity: 1 },
-    { id: '3', brand: 'Rolex', name: 'Watch 3', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod2.png'), rate: 4, address: 'HCM', rateCount: 233, quantity: 2 },
-    { id: '4', brand: 'Rolex', name: 'Watch 4', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod3.png'), rate: 4.2, address: 'Da Nang', rateCount: 5422, quantity: 2 },
-    { id: '5', brand: 'Rolex', name: 'Watch 5', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod4.png'), rate: 4.5, address: 'Lao Cai', rateCount: 32, quantity: 3 },
-    { id: '6', brand: 'Rolex', name: 'Watch 1', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod3.png'), rate: 4.1, address: 'Tp. Hue', rateCount: 43, quantity: 4 },
-    { id: '7', brand: 'Rolex', name: 'Watch 2', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod2.png'), rate: 3.5, address: 'Hai Phong', rateCount: 234, quantity: 1 },
-    { id: '8', brand: 'Rolex', name: 'Watch 3', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod1.png'), rate: 4.5, address: 'Ha Noi', rateCount: 5432, quantity: 2 },
-    { id: '9', brand: 'Rolex', name: 'Watch 4', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod3.png'), rate: 5, address: 'Ca Mau', rateCount: 142, quantity: 3 },
-    { id: '10', brand: 'Rolex', name: 'Watch 10', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod4.png'), rate: 5, address: 'Ha Noi', rateCount: 122, quantity: 1 },
-  ];
   const navigation = useNavigation()
+  const [listProduct, setlistProduct] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+
+
+  const fetchData = useCallback(() => {
+    fetch('https://666138f063e6a0189fe8ec69.mockapi.io/Cart')
+      .then(response => response.json())
+      .then(data => {
+        setlistProduct(data);
+        calculateTotalPrice(data);
+      })
+      .catch(error => console.error('Error fetching data:', error))
+      .finally(() => setRefreshing(false));
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', fetchData);
+    return unsubscribe;
+  }, [navigation, fetchData]);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
+
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     fetch('https://666138f063e6a0189fe8ec69.mockapi.io/Cart')
+  //       .then(response => response.json())
+  //       .then(data => {
+  //         setlistProduct(data);
+  //         calculateTotalPrice(data);
+  //       })
+  //       .catch(error => console.error('Error fetching data:', error));
+  //   });
+
+  //   return unsubscribe;
+  // }, [navigation]);
+
+  const calculateTotalPrice = (products) => {
+    const total = products.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    setTotalPrice(total);
+  }
+
+  const updateQuantity = (item, operation) => {
+    const updatedQuantity = operation === 'increase' ? item.quantity + 1 : item.quantity - 1;
+
+    if (updatedQuantity < 1) return;
+
+    const updatedList = listProduct.map(product => {
+      if (product.id === item.id) {
+        return { ...product, quantity: updatedQuantity };
+      }
+      return product;
+    });
+
+    setlistProduct(updatedList);
+    calculateTotalPrice(updatedList);
+
+    fetch(`https://666138f063e6a0189fe8ec69.mockapi.io/Cart/${item.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...item, quantity: updatedQuantity }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Successfully updated:', data);
+      })
+      .catch(error => {
+        console.error('Error updating data:', error);
+      });
+  }
+
+
+  const deleteItem = (item) => {
+    Alert.alert(
+      "Delete Item",
+      "Are you sure you want to delete this item?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Delete",
+          onPress: () => {
+            fetch(`https://666138f063e6a0189fe8ec69.mockapi.io/Cart/${item.id}`, {
+              method: 'DELETE',
+            })
+              .then(response => response.json())
+              .then(() => {
+                // Update local state
+                const updatedList = listProduct.filter(product => product.id !== item.id);
+                setlistProduct(updatedList);
+                calculateTotalPrice(updatedList);
+              })
+              .catch(error => {
+                console.error('Error deleting item:', error);
+              });
+          },
+          style: "destructive"
+        }
+      ],
+      { cancelable: true }
+    );
+  };
+
   const renderProd = ({ item }: any) => {
     return (
       <Pressable onPress={() => navigation.navigate('ProductDetail', { item })}>
         <View style={st.itemProduct}>
           <View style={st.Left}>
-            <Image source={item.image} style={st.imageProduct} />
-            {/* <TouchableOpacity style={st.like}><Image source={require('./image/iconLikeRed.png')} style={st.likeIcon} /></TouchableOpacity> */}
+            <Image source={{ uri: item.image }} style={st.imageProduct} />
           </View>
           <View style={st.Right}>
+            <TouchableOpacity style={st.deleteItem} onPress={() => deleteItem(item)}>
+              <Image source={require('./image/iconExitBlack.png')} />
+            </TouchableOpacity>
             <Text style={st.brandProduct}>{item.brand}</Text>
             <Text style={st.titleProduct} numberOfLines={2}>{item.name}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -41,9 +141,9 @@ const Cart = () => {
               </View>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <TouchableOpacity style={st.plus_minus}><Text style={st.txtAddToCart}>-</Text></TouchableOpacity>
+              <TouchableOpacity style={st.plus_minus} onPress={() => updateQuantity(item, 'decrease')}><Text style={st.txtAddToCart}>-</Text></TouchableOpacity>
               <Text style={st.txtQuantity}>{item.quantity}</Text>
-              <TouchableOpacity style={st.plus_minus}><Text style={st.txtAddToCart}>+</Text></TouchableOpacity>
+              <TouchableOpacity style={st.plus_minus} onPress={() => updateQuantity(item, 'increase')}><Text style={st.txtAddToCart}>+</Text></TouchableOpacity>
             </View>
           </View>
         </View>
@@ -51,25 +151,17 @@ const Cart = () => {
     )
   }
 
-  // const renderProd = ({ item }: any) => <Product brand={item.brand} name={item.name} price={item.price} image={item.image} size={item.size} quantity={item.quantity} />;
   //=====================
   return (
     <SafeAreaView style={st.container}>
-      <View style={st.head}>
-        <Pressable onPress={()=>navigation.navigate('Setting')}>
-          <Image source={require('./image/iconSetting.png')} style={st.person} />
-        </Pressable>
-        <Text style={{ fontSize: 26, fontWeight: 'bold', color: 'black' }}>Home</Text>
-        <Pressable>
-          <Image source={require('./image/personIcon.png')} style={st.person} />
-        </Pressable>
-      </View>
+      <Header titleHeader='Cart' />
       <FlatList
-        data={Prod1}
+        data={listProduct}
         renderItem={renderProd}
         keyExtractor={item => item.id}
         style={st.prod}
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: '40%',backgroundColor: 'white',paddingLeft:'4%' }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: '40%', backgroundColor: 'white', paddingLeft: '4%' }}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
       <View style={st.boxPay}>
         <View style={st.leftPay}>
@@ -80,7 +172,7 @@ const Cart = () => {
               fontSize: 24,
               fontWeight: 'bold',
               color: '#2AB381',
-            }}>1000</Text>
+            }}>{totalPrice.toFixed(2)}</Text>
           </View>
         </View>
         <Pressable onPress={() => navigation.navigate('Payment')} style={st.pressPay}><Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold' }}>Pay</Text></Pressable>
@@ -93,20 +185,7 @@ const Cart = () => {
 export default Cart
 const st = StyleSheet.create({
   container: {
-    flex: 1,    
-  },
-  head: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: '5%',
-    paddingVertical: '3%'
-  },
-  person: {
-    width: 50,
-    height: 50,
-    backgroundColor: '#E9E9E9',
-    borderRadius: 50,
+    flex: 1,
   },
   prod: {
     flex: 1,
@@ -128,6 +207,11 @@ const st = StyleSheet.create({
     alignItems: 'flex-start',
     paddingVertical: '1%',
     paddingHorizontal: '6%'
+  },
+  deleteItem: {
+    // alignSelf: 'flex-end',
+    position: 'absolute',
+    right: 16
   },
   imageProduct: {
     width: '90%',

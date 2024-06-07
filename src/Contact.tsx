@@ -3,21 +3,14 @@ import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import Header from './Header';
 
 const Contact = () => {
     const navigation = useNavigation();
     const [showSendModal, setshowSendModal] = useState(false);
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flexGrow: 1 }}>
-            <View style={st.head}>
-                <Pressable onPress={()=>navigation.navigate('Setting')}>
-                    <Image source={require('./image/iconSetting.png')} style={st.person} />
-                </Pressable>
-                <Text style={{ fontSize: 26, fontWeight: 'bold', color: 'black' }}>Contact</Text>
-                <Pressable>
-                    <Image source={require('./image/personIcon.png')} style={st.person} />
-                </Pressable>
-            </View>
+            <Header titleHeader='Contact' />
             <SafeAreaView style={st.container}>
                 <View style={st.boxContact}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: '4%' }}>
@@ -46,7 +39,7 @@ const Contact = () => {
                             <View style={st.boxModal}>
                                 <Text style={st.txtTitleSend}>CONTACT US</Text>
                                 <TouchableOpacity onPress={() => setshowSendModal(false)} style={st.boxExit}>
-                                    <Image source={require('./image/iconExit.png')} style={st.iconExit} />
+                                    <Image source={require('./image/iconExitGreen.png')} style={st.iconExit} />
                                 </TouchableOpacity>
                                 <TextInput style={st.tipInfor} placeholder='Your name'></TextInput>
                                 <TextInput style={st.tipInfor} placeholder='Your email'></TextInput>
@@ -103,21 +96,6 @@ const st = StyleSheet.create({
     imgSend: {
         width: 60,
     },
-
-    head: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingHorizontal: '5%',
-        paddingVertical: '3%'
-    },
-    person: {
-        width: 50,
-        height: 50,
-        backgroundColor: '#E9E9E9',
-        borderRadius: 50,
-    },
-
     containerModal: {
         flex: 1,
     },

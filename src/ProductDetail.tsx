@@ -14,13 +14,13 @@ const ProductDetail = ({ route, navigation }: any) => {
                 <Pressable onPress={() => navigation.goBack()}>
                     <Image source={require('./image/iconBack.png')} style={st.back} />
                 </Pressable>
-                <Pressable onPress={() => navigation.goBack()}>
-                    <Image source={require('./image/iconLikeRed.png')} style={st.like} />
+                <Pressable style={st.boxLike}>
+                    <Image source={item.liked ? require('./image/iconLikeRed.png') : require('./image/iconLikeWhite.png')} style={st.like} />
                 </Pressable>
             </View>
             <ScrollView>
                 <View style={st.top}>
-                    <Image source={item.image} style={st.imgProduct} />
+                    <Image source={{ uri: item.image }} style={st.imgProduct} />
                     <View style={st.bottomImage}>
                         <View style={st.left}>
                             <Text style={st.name} numberOfLines={2}>{item.name}</Text>
@@ -81,10 +81,10 @@ const ProductDetail = ({ route, navigation }: any) => {
                             fontSize: 24,
                             fontWeight: 'bold',
                             color: '#2AB381',
-                        }}>1000</Text>
+                        }}>{item.price}</Text>
                     </View>
                 </View>
-                <Pressable style={st.pressPay}><Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold' }}>Pay</Text></Pressable>
+                <Pressable style={st.pressPay} onPress={()=>navigation.navigate('Payment')}><Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold' }}>Pay</Text></Pressable>
             </View>
         </SafeAreaView>
     )
@@ -95,6 +95,7 @@ export default ProductDetail
 const st = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor:'orange'
     },
     head: {
         width: '100%',
@@ -113,12 +114,17 @@ const st = StyleSheet.create({
         borderRadius: 10,
         resizeMode: 'center',
     },
-    like: {
-        width: 40,
-        height: 40,
+    boxLike: {
+        width:40,
+        height:40,
         backgroundColor: 'rgba(0,0,0,0.5)',
         borderRadius: 10,
-        padding: 10,
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    like: {
+        width: 30,
+        height: 28,
     },
     //------------------------
     top: {
@@ -127,7 +133,7 @@ const st = StyleSheet.create({
     imgProduct: {
         width: '100%',
         height: 480,
-        resizeMode: 'cover'
+        // resizeMode: 'cover'
     },
     bottomImage: {
         position: 'absolute',

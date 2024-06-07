@@ -1,15 +1,21 @@
-import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity, Image, TextInput, FlatList, Dimensions, ScrollView, Pressable, Touchable, KeyboardAvoidingView, Platform, StatusBar, LayoutAnimation } from 'react-native'
+import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity, Image, TextInput, FlatList, Dimensions, ScrollView, Pressable, Touchable, KeyboardAvoidingView, Platform, StatusBar, LayoutAnimation, ActivityIndicator, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Header from './Header';
 
 
 const { width, height } = Dimensions.get('window');
 
 
 const Home = () => {
+  const navigation = useNavigation()
+  const [selectedCategoryId, setSelectedCategoryId] = useState('');
+  const [listNewProduct, setlistNewProduct] = useState([]);
+  const [listBestSell, setlistBestSell] = useState([]);
+  const [isLoading, setisLoading] = useState(true);
   const category = [
     { id: '1', title: 'All', image: require('./image/logo.png') },
     { id: '2', title: 'Rolex', },
@@ -17,7 +23,6 @@ const Home = () => {
     { id: '4', title: 'Calvin-Klein' },
     { id: '5', title: 'TimeX', },];
 
-  const [selectedCategoryId, setSelectedCategoryId] = useState('');
   useEffect(() => {
     const getCategory = async () => {
       try {
@@ -45,10 +50,6 @@ const Home = () => {
     }
   };
 
-  // const handleCategoryPress = (id: any) => {
-  //   LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  //   setSelectedCategoryId(id);
-  // };
   const Category = ({ title, image, id }: any) => {
     const isSelected = selectedCategoryId === id;
     return (
@@ -58,86 +59,117 @@ const Home = () => {
   };
   const renderCategory = ({ item }: any) => <Category title={item.title} image={item.image} id={item.id} />;
 
-  const Prod1 = [
-    { id: '1', brand: 'Rolex', name: 'Watch 1', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod4.png'), rate: 5, address: 'Ha Noi', rateCount: 1290 },
-    { id: '2', brand: 'Rolex', name: 'Watch 2', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod3.png'), rate: 5, address: 'Ha Noi', rateCount: 423 },
-    { id: '3', brand: 'Rolex', name: 'Watch 3', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod2.png'), rate: 4, address: 'HCM', rateCount: 233 },
-    { id: '4', brand: 'Rolex', name: 'Watch 4', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod3.png'), rate: 4.2, address: 'Da Nang', rateCount: 5422 },
-    { id: '5', brand: 'Rolex', name: 'Watch 5', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod4.png'), rate: 4.5, address: 'Lao Cai', rateCount: 32 },
-    { id: '6', brand: 'Rolex', name: 'Watch 6', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod3.png'), rate: 4.1, address: 'Tp. Hue', rateCount: 43 },
-    { id: '7', brand: 'Rolex', name: 'Watch 7', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod2.png'), rate: 3.5, address: 'Hai Phong', rateCount: 234 },
-    { id: '8', brand: 'Rolex', name: 'Watch 8', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod1.png'), rate: 4.5, address: 'Ha Noi', rateCount: 5432 },
-    { id: '9', brand: 'Rolex', name: 'Watch 9', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod3.png'), rate: 5, address: 'Ca Mau', rateCount: 142 },
-    { id: '10', brand: 'Rolex', name: 'Watch 10', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod4.png'), rate: 5, address: 'Ha Noi', rateCount: 122 },
-  ];
-  const Prod2 = [
-    { id: '1', brand: 'Cartier', name: 'Watch 1', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod5.png'), rate: 4.7, address: 'Ha Noi', rateCount: 54 },
-    { id: '2', brand: 'Cartier', name: 'Watch 2', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod2.png'), rate: 4.5, address: 'Lao Cai', rateCount: 322 },
-    { id: '3', brand: 'Cartier', name: 'Watch 3', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod3.png'), rate: 4.3, address: 'Lao Cai', rateCount: 333 },
-    { id: '4', brand: 'Cartier', name: 'Watch 4', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod2.png'), rate: 4.5, address: 'Ha Noi', rateCount: 432 },
-    { id: '5', brand: 'Cartier', name: 'Watch 5', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod1.png'), rate: 4.4, address: 'Tp. Hue', rateCount: 123 },
-    { id: '6', brand: 'Cartier', name: 'Watch 1', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod5.png'), rate: 4.5, address: 'Tp. Hue', rateCount: 342 },
-    { id: '7', brand: 'Cartier', name: 'Watch 2', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod4.png'), rate: 4.7, address: 'Ha Noi', rateCount: 24 },
-    { id: '8', brand: 'Cartier', name: 'Watch 3', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod3.png'), rate: 4.5, address: 'Ha Noi', rateCount: 24 },
-    { id: '9', brand: 'Cartier', name: 'Watch 4', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod2.png'), rate: 4.5, address: 'HCM', rateCount: 322 },
-    { id: '10', brand: 'Cartier', name: 'Watch 10', size: ['130mm', '145mm', '150mm', '160mm'], price: '100', image: require('./image/prod1.png'), rate: 4.6, address: 'HCM', rateCount: 233 },
-  ];
+  const getListNewProd = async () => {
+    // let url_api = 'http://192.168.1.8:3001/Products';
+    let url_api = 'https://665f14f81e9017dc16f2c14e.mockapi.io/products';
+    try {
+      const response = await fetch(url_api);
+      const json = await response.json();
+      json.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setlistNewProduct(json);
+    } catch (error) {
+      console.log(error);
 
-  const navigation = useNavigation()
+    } finally {
+      setisLoading(false);
+    }
+  }
+  const getListBestSelling = async () => {
+    let url_api = 'https://665f14f81e9017dc16f2c14e.mockapi.io/products';
+    try {
+      const response = await fetch(url_api);
+      const json = await response.json();
+      json.sort((a, b) => b.sold - a.sold);
+      setlistBestSell(json);
+    } catch (error) {
+      console.log(error);
+
+    } finally {
+      setisLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getListNewProd();
+      getListBestSelling();
+    });
+
+    return unsubscribe;
+  }, [navigation])
+
+  const addToCart = async (product) => {
+    try {
+      const addProd_Quantity = { ...product, quantity:1 };
+      const response = await fetch('https://666138f063e6a0189fe8ec69.mockapi.io/Cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(addProd_Quantity)
+      });
+      if (response.ok) {
+        Alert.alert('Add To Cart','Product added to cart successfully!');
+      } else {
+        Alert.alert('Add To Cart','Failed to add product to cart');
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Add To Cart','An error occurred while adding product to cart');
+    }
+  };
+
+  const addFaourite = async (product) => {
+    try {
+      const response = await fetch('https://666138f063e6a0189fe8ec69.mockapi.io/Favourite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(product)
+      });
+      if (response.ok) {
+        Alert.alert('Add To Favourite','Product added to favourite successfully!');
+      } else {
+        Alert.alert('Add To Favourite','Failed to add favourite to cart');
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Add To Favourite','An error occurred while adding product to cart');
+    }
+  };
+
+
 
   const renderProd = ({ item }: any) => {
     return (
       <Pressable onPress={() => navigation.navigate('ProductDetail', { item })}>
         <View style={st.itemProduct}>
           <View style={st.rate}><Image source={require('./image/rateIcon.png')} /><Text style={st.txtRate}>{item.rate}</Text></View>
-          <Image source={item.image} style={st.imageProduct} />
+          <Image source={{ uri: item.image }} style={st.imageProduct} />
           <Text style={st.brandProduct}>{item.brand}</Text>
           <Text style={st.titleProduct} numberOfLines={1}>{item.name}</Text>
           <View style={st.priceProduct}>
             <Text style={{ color: 'orange', fontSize: 18, marginRight: '2%' }}>$</Text>
             <Text style={st.txtPrice}>{item.price}</Text>
           </View>
-          <TouchableOpacity style={st.AddToCart}><Image source={require('./image/plusIcon.png')} style={st.plusIcon} /></TouchableOpacity>
-          <TouchableOpacity style={st.like}><Image source={require('./image/iconLikeWhite.png')} style={st.likeIcon} /></TouchableOpacity>
+          <TouchableOpacity style={st.AddToCart} onPress={() => addToCart(item)}><Image source={require('./image/plusIcon.png')} style={st.plusIcon} /></TouchableOpacity>
+          <TouchableOpacity style={st.like} onPress={() => addFaourite(item)}>
+            <Image
+              source={item.liked ? require('./image/iconLikeRed.png') : require('./image/iconLikeWhite.png')}
+              style={st.likeIcon} />
+          </TouchableOpacity>
         </View>
       </Pressable>
     )
   }
-  const renderProd2 = ({ item }: any) => {
-    return (
-      <Pressable onPress={() => navigation.navigate('ProductDetail', { item })}>
-        <View style={st.itemProduct}>
-          <View style={st.rate}><Image source={require('./image/rateIcon.png')} /><Text style={st.txtRate}>{item.rate}</Text></View>
-          <Image source={item.image} style={st.imageProduct} />
-          <Text style={st.brandProduct}>{item.brand}</Text>
-          <Text style={st.titleProduct} numberOfLines={1}>{item.name}</Text>
-          <View style={st.priceProduct}>
-            <Text style={{ color: 'orange', fontSize: 18, marginRight: '2%' }}>$</Text>
-            <Text style={st.txtPrice}>{item.price}</Text>
-          </View>
-          <TouchableOpacity style={st.AddToCart}><Image source={require('./image/plusIcon.png')} style={st.plusIcon} /></TouchableOpacity>
-          <TouchableOpacity style={st.like}><Image source={require('./image/iconLikeWhite.png')} style={st.likeIcon} /></TouchableOpacity>
-        </View>
-      </Pressable>
-    )
-  }
-
-
 
   // -------------------------------------------------------
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={st.container}>
       <StatusBar translucent={false} />
       <SafeAreaView style={st.container}>
-        <View style={st.head}>
-          <Pressable onPress={()=>navigation.navigate('Setting')}>
-            <Image source={require('./image/iconSetting.png')} style={st.person} />
-          </Pressable>
-          <Text style={{ fontSize: 26, fontWeight: 'bold', color: 'black' }}>Home</Text>
-          <Pressable>
-            <Image source={require('./image/personIcon.png')} style={st.person} />
-          </Pressable>
-        </View>
+        <Header titleHeader='Home' />
         <ScrollView contentContainerStyle={st.boxProduct}>
           <Text style={st.slogan}>
             Find the best Watch for you
@@ -152,8 +184,7 @@ const Home = () => {
             keyExtractor={item => item.id}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            style={{ paddingLeft: '4%', maxHeight: '6%' }}
-            contentContainerStyle={{ paddingRight: '30%' }}
+            contentContainerStyle={{ padding: 5, marginVertical: 10 }}
           />
           <View><Text style={{
             fontFamily: 'roboto',
@@ -165,15 +196,22 @@ const Home = () => {
             fontWeight: 'bold',
             textDecorationLine: 'underline'
           }}>New products</Text></View>
-          <FlatList
-            data={Prod1}
-            renderItem={renderProd}
-            keyExtractor={item => item.id}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            style={st.prod}
-            ListFooterComponent={<View style={{ width: 200, margin: 50 }} />}
-          />
+          {
+            (isLoading) ? (
+              <ActivityIndicator />
+            ) : (
+              <FlatList
+                data={listNewProduct}
+                renderItem={renderProd}
+                keyExtractor={item => item.id}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                style={st.prod}
+                ListFooterComponent={<View style={{ width: 20, margin: 50 }} />}
+              />
+            )
+          }
+
           <View><Text style={{
             fontFamily: 'roboto',
             marginLeft: '5%',
@@ -184,16 +222,21 @@ const Home = () => {
             fontWeight: 'bold',
             textDecorationLine: 'underline'
           }}>Best-selling</Text></View>
-
-          <FlatList
-            data={Prod2}
-            renderItem={renderProd2}
-            keyExtractor={item => item.id}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            style={st.prod}
-            ListFooterComponent={<View style={{ width: 200, margin: 50 }} />}
-          />
+          {
+            (isLoading) ? (
+              <ActivityIndicator />
+            ) : (
+              <FlatList
+                data={listBestSell}
+                renderItem={renderProd}
+                keyExtractor={item => item.id}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                style={st.prod}
+                ListFooterComponent={<View style={{ width: 20, margin: 50 }} />}
+              />
+            )
+          }
         </ScrollView>
       </SafeAreaView>
     </KeyboardAvoidingView>
@@ -205,19 +248,7 @@ export default Home
 const st = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  head: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal:'5%',
-    paddingVertical:'3%'
-  },
-  person: {
-    width: 50,
-    height: 50,
-    backgroundColor: '#E9E9E9',
-    borderRadius: 50,
+    backgroundColor: 'white'
   },
   slogan: {
     width: '50%',
@@ -249,7 +280,6 @@ const st = StyleSheet.create({
     flex: 1
   },
   itemCategory: {
-    marginVertical: 8,
     marginHorizontal: 8,
     paddingHorizontal: 16,
     justifyContent: 'center',
@@ -277,13 +307,12 @@ const st = StyleSheet.create({
     flex: 1,
     width: 'auto',
     height: height * 0.26,
-
   },
   itemProduct: {
     borderRadius: 24,
     paddingTop: '6%',
     width: width * 0.38,
-    marginHorizontal: '0.8%',
+    marginHorizontal: 8,
     marginVertical: '2%',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
@@ -367,8 +396,4 @@ const st = StyleSheet.create({
     color: 'white',
     marginLeft: 4
   }
-
-  ///*Bottom tabs
-
-
 })

@@ -1,0 +1,203 @@
+{
+    "Users": [
+        {
+            "id": 1,
+            "name": "Tran Thi A",
+            "email": "tta@gmail.com",
+            "password": "tranthia",
+            "avatar": ""
+        },
+        {
+            "id": 2,
+            "name": "Hoang VAn B",
+            "email": "hvb@gmail.com",
+            "password": "hoangvanb",
+            "avatar": ""
+        }
+    ],
+    "Products": [
+        {
+            "createdAt": "2024-06-05T12:17:46.437Z",
+            "brand": "Rolex",
+            "name": "Watch 1",
+            "size": [
+                "130mm",
+                "145mm",
+                "150mm",
+                "160mm"
+            ],
+            "price": "100",
+            "image": "https://product.hstatic.net/1000270050/product/tw2u05700_502b754359cc4430a8177873bb35d839_master.jpg",
+            "rate": 5,
+            "address": "Ha Noi",
+            "rateCount": 1290,
+            "sold": 85,
+            "id": "1"
+        },
+        {
+            "createdAt": "2024-06-05T17:28:04.625Z",
+            "brand": "Rolex",
+            "name": "Watch 2",
+            "size": [
+                "130mm",
+                "145mm",
+                "150mm",
+                "160mm"
+            ],
+            "price": "56",
+            "image": "https://product.hstatic.net/1000270050/product/tw2p91600.u4064.d20161221.t172957.661035_8b1f923d3645494a89c4fd6cfaca7e59_master.jpg",
+            "rate": 5,
+            "address": "Ha Noi",
+            "rateCount": 423,
+            "sold": 43,
+            "id": "2"
+        },
+        {
+            "createdAt": "2024-06-05T15:04:26.314Z",
+            "brand": "Rolex",
+            "name": "Watch 3",
+            "size": [
+                "130mm",
+                "145mm",
+                "150mm",
+                "160mm"
+            ],
+            "price": "98",
+            "image": "https://product.hstatic.net/1000270050/product/timex-tw2t69400-nam-avatar-1-600x600_4e0c42f685cd427aaf2f9fdb9a1aef54_master.jpg",
+            "rate": 4,
+            "address": "HCM",
+            "rateCount": 233,
+            "sold": 21,
+            "id": "3"
+        },
+        {
+            "createdAt": "2024-06-05T23:51:00.152Z",
+            "brand": "Rolex",
+            "name": "Watch 4",
+            "size": [
+                "130mm",
+                "145mm",
+                "150mm",
+                "160mm"
+            ],
+            "price": "123",
+            "image": "https://product.hstatic.net/1000270050/product/timex-tw2u67500-namava-600x600_f55c52158a3d4a27b8d4c5149fdfa0d9_master.jpg",
+            "rate": 4.2,
+            "address": "Da Nang",
+            "rateCount": 5422,
+            "sold": 87,
+            "id": "4"
+        },
+        {
+            "createdAt": "2024-06-05T12:20:45.323Z",
+            "brand": "Rolex",
+            "name": "Watch 5",
+            "size": [
+                "130mm",
+                "145mm",
+                "150mm",
+                "160mm"
+            ],
+            "price": "110",
+            "image": "https://product.hstatic.net/1000270050/product/skeleton-hourglass-silvery-watch_d0c0d21a473043aebf278a8bd72d655c_master.png",
+            "rate": 4.5,
+            "address": "Lao Cai",
+            "rateCount": 32,
+            "sold": 49,
+            "id": "5"
+        },
+        {
+            "createdAt": "2024-06-06T00:12:31.139Z",
+            "brand": "Rolex",
+            "name": "Watch 6",
+            "size": [
+                "130mm",
+                "145mm",
+                "150mm",
+                "160mm"
+            ],
+            "price": "209",
+            "image": "https://product.hstatic.net/1000270050/product/tw2r80100_b_master.jpg",
+            "rate": 4.1,
+            "address": "Tp. Hue",
+            "rateCount": 43,
+            "sold": 92,
+            "id": "6"
+        },
+        {
+            "createdAt": "2024-06-06T06:17:41.200Z",
+            "brand": "Rolex",
+            "name": "Watch 7",
+            "size": [
+                "130mm",
+                "145mm",
+                "150mm",
+                "160mm"
+            ],
+            "price": "200",
+            "image": "https://product.hstatic.net/1000270050/product/7588c36-4a92-4422-974c-37a5f6d8d185_1.8d2accc43aea315909eaf347d7548f5d_459604782d78496083e9c5bcfdf4243a_master.jpeg",
+            "rate": 3.5,
+            "address": "Hai Phong",
+            "rateCount": 234,
+            "sold": 35,
+            "id": "7"
+        },
+        {
+            "createdAt": "2024-06-05T09:44:15.116Z",
+            "brand": "Rolex",
+            "name": "Watch 8",
+            "size": [
+                "130mm",
+                "145mm",
+                "150mm",
+                "160mm"
+            ],
+            "price": "230",
+            "image": "https://product.hstatic.net/1000270050/product/st80095_2ab6f73f68fc4e65b17125cab982fe0b_master.jpg",
+            "rate": 4.5,
+            "address": "Ha Noi",
+            "rateCount": 5432,
+            "sold": 11,
+            "id": "8"
+        },
+        {
+            "createdAt": "2024-06-06T02:31:15.824Z",
+            "brand": "Rolex",
+            "name": "Watch 9",
+            "size": [
+                "130mm",
+                "145mm",
+                "150mm",
+                "160mm"
+            ],
+            "price": "420",
+            "image": "https://product.hstatic.net/1000270050/product/st89129_416bb4581d224d3f9d86ae6fbf118ab6_master.jpg",
+            "rate": 5,
+            "address": "Ca Mau",
+            "rateCount": 142,
+            "sold": 69,
+            "id": "9"
+        },
+        {
+            "createdAt": "2024-06-05T10:08:21.466Z",
+            "brand": "Rolex",
+            "name": "Watch 10",
+            "size": [
+                "130mm",
+                "145mm",
+                "150mm",
+                "160mm"
+            ],
+            "price": "420",
+            "image": "https://product.hstatic.net/1000270050/product/fa3ad007851bd868c15708bcf1efa7bc_b831b539968c477589134c440ab03286_master.jpg",
+            "rate": 5,
+            "address": "Ha Noi",
+            "rateCount": 122,
+            "sold": 51,
+            "id": "10"
+        }
+    ],
+    "Carts": [],
+    "Orders": [],
+    "Contacts": []
+}

@@ -1,10 +1,91 @@
-import { StyleSheet, View, Text, SafeAreaView, Image, TextInput, Button, ImageBackground, TouchableOpacity, Platform, Pressable, KeyboardAvoidingView, ScrollView, StatusBar } from 'react-native'
+import { StyleSheet, View, Text, SafeAreaView, Image, TextInput, Button, ImageBackground, TouchableOpacity, Platform, Pressable, KeyboardAvoidingView, ScrollView, StatusBar, Alert } from 'react-native'
 import * as React from 'react'
 import CheckBox from '@react-native-community/checkbox'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import Home from './Home';
 
-const SignIn = ({ navigation }: any) => {
+const SignIn = () => {
+  const navigation = useNavigation();
   const [toggleCheckBox, setToggleCheckBox] = React.useState(false);
   const [passVisible, setpassVisible] = React.useState(false);
+  const [email, setemail] = React.useState('')
+  const [password, setpassword] = React.useState('')
+
+  // const doSignIn = () => {
+  //   //validate
+  //   if (email.length == 0) {
+  //     Alert.alert('Please enter your email!'); return;
+  //   }
+  //   if (password.length == 0) {
+  //     Alert.alert('Please enter your password!'); return;
+  //   }
+
+  //   //fetch email data
+  //   let urlCheckSignIn = "http://192.168.1.8:3001/Users?email=" + email;
+  //   fetch(urlCheckSignIn)
+  //     .then((res) => { return res.json(); })
+  //     .then(async (resSignIn) => {
+  //       if (resSignIn.length != 1) {
+  //         Alert.alert("Wrong email or same data");
+  //         return
+  //       } else {
+  //         //số  lượng được 1 bản ghi =>check pass
+  //         let objU = resSignIn[0];
+  //         if (objU.password != password) {
+  //           Alert.alert('Wrong password!');
+  //           return;
+  //         } else {
+  //           try {
+  //             await AsyncStorage.setItem('signInInfo', JSON.stringify(objU));
+  //             navigation.navigate('Home');
+  //             console.log('Home');
+
+  //           } catch (e) {
+  //             console.log(e);
+  //           }
+  //         }
+  //       }
+  //     })
+
+  // }
+
+  const validateEmail = (email) => {
+    const regEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return regEmail.test(String(email).toLowerCase());
+  };
+
+  const doSignIn = async () => {
+    if (!email) {
+      Alert.alert('Validation Error', 'Email không được để trống');
+      return;
+    } else if (!validateEmail(email)) {
+      Alert.alert('Validation Error', 'Email không hợp lệ');
+      return;
+    }
+    if (!password) {
+      Alert.alert('Validation Error', 'Mật khẩu không được để trống');
+      return;
+    }
+
+    try {
+      const response = await fetch('https://665f14f81e9017dc16f2c14e.mockapi.io/Users');
+      const data = await response.json();
+
+      const user = data.find((user) => user.email === email && user.password === password);
+
+      if (user) {
+        navigation.navigate('Home');
+      } else {
+        Alert.alert('Login Failed', 'Email hoặc mật khẩu không đúng');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      Alert.alert('Login Failed', 'Có lỗi xảy ra khi đăng nhập');
+    } finally {
+    }
+  }
+
 
   const passPress = () => {
     setpassVisible(!passVisible);
@@ -22,11 +103,11 @@ const SignIn = ({ navigation }: any) => {
             }}>WELCOME! Login to continue</Text>
             <View style={st.ifno_container}>
               <View style={st.box_info}>
-                <TextInput style={st.tip} placeholder='Enter email' textContentType='emailAddress' keyboardType='email-address' />
+                <TextInput style={st.tip} placeholder='Enter email' textContentType='emailAddress' keyboardType='email-address' onChangeText={(txt) => { setemail(txt) }} />
               </View>
               <View style={st.box_info}>
-                <TextInput style={st.tip} placeholder='Enter password' textContentType='password' secureTextEntry={!passVisible} />
-                <Pressable onPress={passPress} style={{justifyContent:'center'}}>
+                <TextInput style={st.tip} placeholder='Enter password' textContentType='password' secureTextEntry={!passVisible} onChangeText={(txt) => { setpassword(txt) }} />
+                <Pressable onPress={passPress} style={{ justifyContent: 'center' }}>
                   <Image source={passVisible ? require('./image/iconHidePass.png') : require('./image/iconShowPass.png')} style={st.iconPass} />
                 </Pressable>
               </View>
@@ -38,7 +119,8 @@ const SignIn = ({ navigation }: any) => {
                 <Text style={{ color: 'black' }}>Remember me?</Text>
               </View>
 
-              <TouchableOpacity style={st.btnSignIn} onPress={() => { navigation.navigate('Home') }}>
+              {/* <TouchableOpacity style={st.btnSignIn} onPress={() =>doSignIn()}> */}
+              <TouchableOpacity style={st.btnSignIn} onPress={() => navigation.navigate('Home')}>
                 <Text style={st.t_signIn}>Sign In</Text>
               </TouchableOpacity>
             </View>

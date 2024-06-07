@@ -21,14 +21,19 @@ const Setting = () => {
                     <Text style={st.txtTitle}>Personal Detail</Text>
                     <Image style={st.iconGoto} source={require('./greenIcon/iconBack.png')} />
                 </Pressable>
-                <Pressable style={st.settingItem}>
-                    <Image style={st.iconLeft} source={require('./greenIcon/iconAddressGreen.png')} />
-                    <Text style={st.txtTitle}>Address</Text>
-                    <Image style={st.iconGoto} source={require('./greenIcon/iconBack.png')} />
-                </Pressable>
                 <Pressable style={st.settingItem} onPress={() => navigation.navigate('Payment')}>
                     <Image style={st.iconLeft} source={require('./greenIcon/iconPayMethodGreen.png')} />
                     <Text style={st.txtTitle}>Payment Method</Text>
+                    <Image style={st.iconGoto} source={require('./greenIcon/iconBack.png')} />
+                </Pressable>
+                <Pressable style={st.settingItem} onPress={() => navigation.navigate('Contact')}>
+                    <Image style={st.iconLeft} source={require('./greenIcon/iconContactGreen.png')} />
+                    <Text style={st.txtTitle}>Contact us</Text>
+                    <Image style={st.iconGoto} source={require('./greenIcon/iconBack.png')} />
+                </Pressable>
+                 <Pressable style={st.settingItem}>
+                    <Image style={st.iconLeft} source={require('./greenIcon/iconAddressGreen.png')} />
+                    <Text style={st.txtTitle}>Address</Text>
                     <Image style={st.iconGoto} source={require('./greenIcon/iconBack.png')} />
                 </Pressable>
                 <Pressable style={st.settingItem}>

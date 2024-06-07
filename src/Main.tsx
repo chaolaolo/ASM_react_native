@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Home from './Home';
@@ -19,6 +19,7 @@ import PersonalDetail from './PersonalDetail';
 const stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const BottomTabs = () => {
+
     return (
         <Tab.Navigator screenOptions={{
             headerShown: false,
@@ -28,7 +29,7 @@ const BottomTabs = () => {
                 height: 80,
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,
-                borderTopWidth:0
+                borderTopWidth: 0
             },
             tabBarItemStyle: {
                 padding: '1%',
@@ -41,7 +42,7 @@ const BottomTabs = () => {
             tabBarActiveBackgroundColor: '#2A2A2A',
         }}>
             <Tab.Screen
-                name="Home"
+                name="HomeTab"
                 component={Home}
                 options={{
                     tabBarIcon: () => (
@@ -49,7 +50,8 @@ const BottomTabs = () => {
                             style={{ width: 24, height: 24, resizeMode: 'contain' }}
                         />
                     )
-                }} />
+                }} >
+            </Tab.Screen>
             <Tab.Screen
                 name="Cart"
                 component={Cart}
@@ -58,8 +60,11 @@ const BottomTabs = () => {
                         <Image source={require('./image/iconCart.png')}
                             style={{ width: 24, height: 24, resizeMode: 'contain' }}
                         />
-                    )
-                }} />
+                    ),
+                    tabBarBadge: 0,
+                }}
+            >
+            </Tab.Screen>
             <Tab.Screen
                 name="Favourite"
                 component={Favourite}
@@ -70,17 +75,17 @@ const BottomTabs = () => {
                         />
                     )
                 }} />
-            {/* <Tab.Screen
-                name="Notification"
-                component={Notification}
+            <Tab.Screen
+                name="Personal"
+                component={PersonalDetail}
                 options={{
                     tabBarIcon: () => (
-                        <Image source={require('./image/iconNotification.png')}
+                        <Image source={require('./image/iconPerson.png')}
                             style={{ width: 24, height: 24, resizeMode: 'contain' }}
                         />
                     )
-                }} /> */}
-            <Tab.Screen
+                }} />
+            {/* <Tab.Screen
                 name="Contact"
                 component={Contact}
                 options={{
@@ -89,7 +94,7 @@ const BottomTabs = () => {
                             style={{ width: 24, height: 24, resizeMode: 'contain' }}
                         />
                     )
-                }} />
+                }} /> */}
 
         </Tab.Navigator>
     )
@@ -106,6 +111,8 @@ const Main = () => {
                 <stack.Screen name="Payment" component={Payment} />
                 <stack.Screen name="Setting" component={Setting} />
                 <stack.Screen name="PersonalDetail" component={PersonalDetail} />
+                <stack.Screen name="Notification" component={Notification} />
+                <stack.Screen name="Contact" component={Contact} />
             </stack.Navigator>
         </NavigationContainer>
     )
