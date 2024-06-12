@@ -1,11 +1,26 @@
-import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity, Image, TextInput, FlatList, Dimensions, ScrollView, Pressable, Touchable, Alert, RefreshControl } from 'react-native'
+import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity, Image, TextInput, FlatList, Dimensions, ScrollView, Pressable, Touchable, Alert, RefreshControl, ActivityIndicator } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LinearGradient from 'react-native-linear-gradient';
 import Header from './Header';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
+
+const getUserId = async () => {
+  try {
+    const user = await AsyncStorage.getItem('user');
+    if (user) {
+      const userData = JSON.parse(user);
+      return userData.id;
+    }
+  } catch (error) {
+    console.error('Error getting user ID:', error);
+  }
+  return null;
+};
+
 const Cart = () => {
   const navigation = useNavigation()
   const [listProduct, setlistProduct] = useState([]);
@@ -13,17 +28,41 @@ const Cart = () => {
   const [refreshing, setRefreshing] = useState(false);
 
 
-  const fetchData = useCallback(() => {
-    fetch('https://666138f063e6a0189fe8ec69.mockapi.io/Cart')
-      .then(response => response.json())
-      .then(data => {
-        setlistProduct(data);
-        calculateTotalPrice(data);
-      })
-      .catch(error => console.error('Error fetching data:', error))
-      .finally(() => setRefreshing(false));
-  }, []);
-
+  const fetchData = useCallback(async () => {
+    const userId = await getUserId();
+    if (!userId) {
+      console.log('chưa đăng nhập');
+      return;
+    }
+  //   fetch(`https://666138f063e6a0189fe8ec69.mockapi.io/Cart?idUser=${userId}`)
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       if (data.length > 0) {
+  //         setlistProduct(data);
+  //         calculateTotalPrice(data);
+  //       } else{
+  //         calculateTotalPrice(data);
+  //       }
+  //     })
+  //     .catch(error => console.error('Error fetching data:', error))
+  //     .finally(() => setRefreshing(false));
+  // }, []);
+  try {
+    const response = await fetch(`https://666138f063e6a0189fe8ec69.mockapi.io/Cart?idUser=${userId}`);
+    const data = await response.json();
+    if (Array.isArray(data)) {
+      setlistProduct(data);
+      calculateTotalPrice(data);
+    } else {
+      setlistProduct([]);
+      setTotalPrice(0);
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    setRefreshing(false);
+  }
+}, []);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', fetchData);
     return unsubscribe;
@@ -33,20 +72,6 @@ const Cart = () => {
     setRefreshing(true);
     fetchData();
   };
-
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('focus', () => {
-  //     fetch('https://666138f063e6a0189fe8ec69.mockapi.io/Cart')
-  //       .then(response => response.json())
-  //       .then(data => {
-  //         setlistProduct(data);
-  //         calculateTotalPrice(data);
-  //       })
-  //       .catch(error => console.error('Error fetching data:', error));
-  //   });
-
-  //   return unsubscribe;
-  // }, [navigation]);
 
   const calculateTotalPrice = (products) => {
     const total = products.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -132,9 +157,7 @@ const Cart = () => {
             <Text style={st.brandProduct}>{item.brand}</Text>
             <Text style={st.titleProduct} numberOfLines={2}>{item.name}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {/* <View> */}
               <Text style={st.txtSize}>{item.size[0]}</Text>
-              {/* </View> */}
               <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
                 <Text style={{ color: 'orange', fontSize: 20, marginRight: 4 }}>$</Text>
                 <Text style={st.priceProduct}>{item.price}</Text>
@@ -155,14 +178,20 @@ const Cart = () => {
   return (
     <SafeAreaView style={st.container}>
       <Header titleHeader='Cart' />
-      <FlatList
-        data={listProduct}
-        renderItem={renderProd}
-        keyExtractor={item => item.id}
-        style={st.prod}
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: '40%', backgroundColor: 'white', paddingLeft: '4%' }}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      />
+      {listProduct.length === 0 ? (
+        <View style={st.noItemsContainer}>
+          <Text style={st.noItemsText}>No items in cart</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={listProduct}
+          renderItem={renderProd}
+          keyExtractor={item => item.id}
+          style={st.prod}
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: '40%', backgroundColor: 'white', paddingLeft: '4%' }}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        />
+      )}
       <View style={st.boxPay}>
         <View style={st.leftPay}>
           <Text style={{ color: 'black' }}>Total Price</Text>
@@ -175,7 +204,7 @@ const Cart = () => {
             }}>{totalPrice.toFixed(2)}</Text>
           </View>
         </View>
-        <Pressable onPress={() => navigation.navigate('Payment')} style={st.pressPay}><Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold' }}>Pay</Text></Pressable>
+        <Pressable onPress={() => navigation.navigate('Payment',{totalPrice})} style={st.pressPay}><Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold' }}>Pay</Text></Pressable>
       </View>
     </SafeAreaView>
 
@@ -313,5 +342,17 @@ const st = StyleSheet.create({
     paddingHorizontal: '5%',
     marginVertical: '3%',
     marginHorizontal: '3%',
+  },
+
+  noItemsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    paddingBottom: 100
+  },
+  noItemsText: {
+    fontSize: 18,
+    color: 'gray',
   },
 })

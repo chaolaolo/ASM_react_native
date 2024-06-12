@@ -1,10 +1,25 @@
 import { Image, Modal, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Setting = () => {
     const navigation = useNavigation();
     const [showLogoutModal, setshowLogoutModal] = useState(false);
+
+
+    const handleLogout = async () => {
+        try {
+            await AsyncStorage.removeItem('user');
+            navigation.navigate('SignIn');
+            const userData = await AsyncStorage.getItem('user');
+            console.log('User data:', JSON.parse(userData));
+            
+        } catch (error) {
+            console.error('Error clearing AsyncStorage:', error);
+        }
+
+    }
 
     return (
         <SafeAreaView style={st.container}>
@@ -31,7 +46,7 @@ const Setting = () => {
                     <Text style={st.txtTitle}>Contact us</Text>
                     <Image style={st.iconGoto} source={require('./greenIcon/iconBack.png')} />
                 </Pressable>
-                 <Pressable style={st.settingItem}>
+                <Pressable style={st.settingItem}>
                     <Image style={st.iconLeft} source={require('./greenIcon/iconAddressGreen.png')} />
                     <Text style={st.txtTitle}>Address</Text>
                     <Image style={st.iconGoto} source={require('./greenIcon/iconBack.png')} />
@@ -66,7 +81,7 @@ const Setting = () => {
                         <Text style={st.txtLogout}>Are you sure want to log out?</Text>
                         <View style={st.boxButton}>
                             <TouchableOpacity onPress={() => setshowLogoutModal(false)} style={st.btnNo}><Text style={st.txtSend}>No</Text></TouchableOpacity>
-                            <TouchableOpacity style={st.btnYes}><Text style={st.txtSend}>Yes</Text></TouchableOpacity>
+                            <TouchableOpacity style={st.btnYes} onPress={() => handleLogout()}><Text style={st.txtSend}>Yes</Text></TouchableOpacity>
                         </View>
                     </View>
                 </View>

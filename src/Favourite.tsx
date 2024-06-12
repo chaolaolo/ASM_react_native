@@ -4,22 +4,53 @@ import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LinearGradient from 'react-native-linear-gradient';
 import Header from './Header';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
-
+const getUserId = async () => {
+  try {
+    const user = await AsyncStorage.getItem('user');
+    if (user) {
+      const userData = JSON.parse(user);
+      return userData.id;
+    }
+  } catch (error) {
+    console.error('Error getting user ID:', error);
+  }
+  return null;
+};
 const Favourite = () => {
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
   const [listProduct, setlistProduct] = useState([]);
 
 
-  const fetchData = useCallback(() => {
-    fetch('https://666138f063e6a0189fe8ec69.mockapi.io/Favourite')
-      .then(response => response.json())
-      .then(data => setlistProduct(data))
-      .catch(error => console.error('Error fetching data:', error))
-      .finally(() => setRefreshing(false));
-  }, []);
+  const fetchData = useCallback(async() => {
+    const userId = await getUserId();
+    if (!userId) {
+      console.log('chưa đăng nhập');
+      return;
+    }
+  //   fetch('https://666138f063e6a0189fe8ec69.mockapi.io/Favourite')
+  //     .then(response => response.json())
+  //     .then(data => setlistProduct(data))
+  //     .catch(error => console.error('Error fetching data:', error))
+  //     .finally(() => setRefreshing(false));
+  // }, []);
+  try {
+    const response = await fetch(`https://666138f063e6a0189fe8ec69.mockapi.io/Favourite?idUser=${userId}`);
+    const data = await response.json();
+    if (Array.isArray(data)) {
+      setlistProduct(data);
+    } else {
+      setlistProduct([]);
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    setRefreshing(false);
+  }
+}, []);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', fetchData);
@@ -35,7 +66,13 @@ const Favourite = () => {
 
   const addToCart = async (product) => {
     try {
-      const addProd_Quantity = { ...product, quantity: 1 };
+      const user = await AsyncStorage.getItem('user');
+      if (!user) {
+        Alert.alert('Lỗi', 'Đăng  nhập trước khi thêm vào giỏ hàng!');
+        return;
+      }
+      const userData = JSON.parse(user);
+      const addProd_Quantity = { ...product, quantity: 1,idUser:userData.id };
       const response = await fetch('https://666138f063e6a0189fe8ec69.mockapi.io/Cart', {
         method: 'POST',
         headers: {
@@ -66,7 +103,7 @@ const Favourite = () => {
         {
           text: "Delete",
           onPress: () => {
-            fetch(`https://666138f063e6a0189fe8ec69.mockapi.io/Cart/${item.id}`, {
+            fetch(`https://666138f063e6a0189fe8ec69.mockapi.io/Favourite/${item.id}`, {
               method: 'DELETE',
             })
               .then(response => response.json())
@@ -93,7 +130,9 @@ const Favourite = () => {
         <View style={st.itemProduct}>
           <View style={st.Left}>
             <Image source={{ uri: item.image }} style={st.imageProduct} />
-            <TouchableOpacity style={st.like} onPress={() => deleteItem(item)}><Image source={require('./image/iconLikeRed.png')} style={st.likeIcon} /></TouchableOpacity>
+            <TouchableOpacity style={st.like} onPress={() => deleteItem(item)}>
+              <Image source={require('./image/iconLikeRed.png')} style={st.likeIcon} />
+              </TouchableOpacity>
           </View>
           <View style={st.Right}>
             <Text style={st.brandProduct}>{item.brand}</Text>
@@ -112,15 +151,20 @@ const Favourite = () => {
   return (
     <SafeAreaView style={st.container}>
       <Header titleHeader='Favourite' />
-      <FlatList
-        data={listProduct}
-        renderItem={renderProd}
-        keyExtractor={item => item.id}
-        style={st.prod}
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: '20%', backgroundColor: 'white', paddingLeft: '4%' }}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
-        />
-        </SafeAreaView>
+      {listProduct.length === 0 ? (
+        <View style={st.noItemsContainer}>
+          <Text style={st.noItemsText}>none favourite item</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={listProduct}
+          renderItem={renderProd}
+          keyExtractor={item => item.id}
+          style={st.prod}
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: '20%', backgroundColor: 'white', paddingLeft: '4%' }}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        />)}
+    </SafeAreaView>
 
   )
 }
@@ -209,5 +253,15 @@ const st = StyleSheet.create({
     height: 20,
     resizeMode: 'contain',
     opacity: 1,
-  }
+  },
+  noItemsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor:'white'
+  },
+  noItemsText: {
+    fontSize: 18,
+    color: 'gray',
+  },
 })

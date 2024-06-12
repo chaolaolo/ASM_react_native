@@ -1,10 +1,12 @@
 import { Image, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import LinearGradient from 'react-native-linear-gradient';
 
 const Payment = () => {
     const navigation = useNavigation();
+    const route =useRoute();
+    const { totalPrice } = route.params;
     return (
         <SafeAreaView style={st.container}>
             <StatusBar translucent={false} backgroundColor='transparent' barStyle={'dark-content'} />
@@ -68,7 +70,7 @@ const Payment = () => {
                             fontSize: 24,
                             fontWeight: 'bold',
                             color: '#2AB381',
-                        }}>1000</Text>
+                        }}>{totalPrice}</Text>
                     </View>
                 </View>
                 <Pressable style={st.pressPay}><Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold', }}>Pay by Cash</Text></Pressable>

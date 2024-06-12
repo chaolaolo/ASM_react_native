@@ -1,4 +1,4 @@
-import { Image, KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
@@ -8,6 +8,39 @@ import Header from './Header';
 const Contact = () => {
     const navigation = useNavigation();
     const [showSendModal, setshowSendModal] = useState(false);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [content, setContent] = useState('');
+
+    const SendContact = () => {
+        let err = false;
+        if (name.length == 0 && email.length == 0 && content.length == 0) {
+            Alert.alert('Lỗi', 'Hãy nhập thông tin của bạn')
+            err = true;
+            return;
+        };
+        if (name.length == 0) {
+            Alert.alert('Lỗi', 'Hãy nhập họ tên của bạn')
+            err = true;
+            return;
+        };
+        if (email.length == 0) {
+            Alert.alert('Lỗi', 'Hãy nhập email của bạn')
+            err = true;
+            return;
+        };
+        if (content.length == 0) {
+            Alert.alert('Lỗi', 'Hãy nhập tin nhắn bạn muốn gửi cho chúng tôi!')
+            err = true;
+            return;
+        };
+        if (!err) {
+            Alert.alert('Thành công', 'Cảm ơn bạn đã liên lạc với chúng tôi.');
+            setshowSendModal(false);
+        };
+
+    }
+
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flexGrow: 1 }}>
             <Header titleHeader='Contact' />
@@ -41,12 +74,12 @@ const Contact = () => {
                                 <TouchableOpacity onPress={() => setshowSendModal(false)} style={st.boxExit}>
                                     <Image source={require('./image/iconExitGreen.png')} style={st.iconExit} />
                                 </TouchableOpacity>
-                                <TextInput style={st.tipInfor} placeholder='Your name'></TextInput>
-                                <TextInput style={st.tipInfor} placeholder='Your email'></TextInput>
-                                <TextInput style={st.tipInfor} placeholder='Your phone number'></TextInput>
+                                <TextInput style={st.tipInfor} placeholder='Your name' onChangeText={setName}></TextInput>
+                                <TextInput style={st.tipInfor} placeholder='Your email' onChangeText={setEmail}></TextInput>
+                                {/* <TextInput style={st.tipInfor} placeholder='Your phone number'></TextInput> */}
                                 <TextInput style={st.tipInfor} placeholder='Your address'></TextInput>
-                                <TextInput style={st.tipInfor} placeholder='Type your message' multiline={true} numberOfLines={4}></TextInput>
-                                <TouchableOpacity style={st.btnSend}><Text style={st.txtSend}>SEND</Text></TouchableOpacity>
+                                <TextInput style={st.tipInfor} placeholder='Type your message' multiline={true} numberOfLines={4} onChangeText={setContent}></TextInput>
+                                <TouchableOpacity style={st.btnSend} onPress={() => SendContact()}><Text style={st.txtSend}>SEND</Text></TouchableOpacity>
                             </View>
                         </ScrollView>
                     </GestureHandlerRootView>

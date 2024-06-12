@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Home from './Home';
@@ -61,7 +61,7 @@ const BottomTabs = () => {
                             style={{ width: 24, height: 24, resizeMode: 'contain' }}
                         />
                     ),
-                    tabBarBadge: 0,
+                    // tabBarBadge: 0,
                 }}
             >
             </Tab.Screen>

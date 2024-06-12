@@ -1,11 +1,41 @@
-import { Image, Pressable, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, Pressable, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductDetail = ({ route, navigation }: any) => {
     // const navigation=useNavigation();
     const { item } = route.params;
+
+    const addFaourite = async (product) => {
+        try {
+          const user = await AsyncStorage.getItem('user');
+          if (!user) {
+            Alert.alert('Lỗi', 'Đăng  nhập trước khi thêm vào mục yêu thích!');
+            return;
+          }
+          const userData = JSON.parse(user);
+          const addIdUser = { ...product, idUser:userData.id};
+          const response = await fetch('https://666138f063e6a0189fe8ec69.mockapi.io/Favourite', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(addIdUser)
+          });
+          if (response.ok) {
+            Alert.alert('Add To Favourite','Product added to favourite successfully!');
+          } else {
+            Alert.alert('Add To Favourite','Failed to add favourite to cart');
+          }
+        } catch (error) {
+          console.error(error);
+          Alert.alert('Add To Favourite','An error occurred while adding product to cart');
+        }
+      };
+    
+
 
     return (
         <SafeAreaView style={st.container}>
@@ -14,8 +44,8 @@ const ProductDetail = ({ route, navigation }: any) => {
                 <Pressable onPress={() => navigation.goBack()}>
                     <Image source={require('./image/iconBack.png')} style={st.back} />
                 </Pressable>
-                <Pressable style={st.boxLike}>
-                    <Image source={item.liked ? require('./image/iconLikeRed.png') : require('./image/iconLikeWhite.png')} style={st.like} />
+                <Pressable style={st.boxLike} onPress={() => addFaourite(item)}>
+                    <Image source={require('./image/iconLikeWhite.png')} style={st.like} />
                 </Pressable>
             </View>
             <ScrollView>
@@ -84,7 +114,7 @@ const ProductDetail = ({ route, navigation }: any) => {
                         }}>{item.price}</Text>
                     </View>
                 </View>
-                <Pressable style={st.pressPay} onPress={()=>navigation.navigate('Payment')}><Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold' }}>Pay</Text></Pressable>
+                <Pressable style={st.pressPay} onPress={() => navigation.navigate('Payment',{totalPrice:item.price})}><Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold' }}>Pay</Text></Pressable>
             </View>
         </SafeAreaView>
     )
@@ -95,7 +125,7 @@ export default ProductDetail
 const st = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor:'orange'
+        backgroundColor: 'rgba(1,1,1,0.01)'
     },
     head: {
         width: '100%',
@@ -115,12 +145,12 @@ const st = StyleSheet.create({
         resizeMode: 'center',
     },
     boxLike: {
-        width:40,
-        height:40,
+        width: 40,
+        height: 40,
         backgroundColor: 'rgba(0,0,0,0.5)',
         borderRadius: 10,
-        alignItems:'center',
-        justifyContent:'center'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     like: {
         width: 30,
@@ -205,8 +235,8 @@ const st = StyleSheet.create({
     bottom: {
         width: '100%',
         backgroundColor: 'rgba(0,0,0,0.2)',
-        paddingBottom:'10%',
-        marginBottom:70
+        paddingBottom: '10%',
+        marginBottom: 70
     },
     txtSize: {
         // fontSize: 20,

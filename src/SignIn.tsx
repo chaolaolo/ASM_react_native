@@ -1,87 +1,82 @@
 import { StyleSheet, View, Text, SafeAreaView, Image, TextInput, Button, ImageBackground, TouchableOpacity, Platform, Pressable, KeyboardAvoidingView, ScrollView, StatusBar, Alert } from 'react-native'
-import * as React from 'react'
+import React, { useState } from 'react'
 import CheckBox from '@react-native-community/checkbox'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import Home from './Home';
+import ErrorModal from './ErrorModal';
 
-const SignIn = () => {
+const SignIn = ({ route }) => {
   const navigation = useNavigation();
-  const [toggleCheckBox, setToggleCheckBox] = React.useState(false);
-  const [passVisible, setpassVisible] = React.useState(false);
-  const [email, setemail] = React.useState('')
-  const [password, setpassword] = React.useState('')
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const [passVisible, setpassVisible] = useState(false);
+  const [email, setemail] = useState('')
+  const [password, setpassword] = useState('')
 
-  // const doSignIn = () => {
-  //   //validate
-  //   if (email.length == 0) {
-  //     Alert.alert('Please enter your email!'); return;
-  //   }
-  //   if (password.length == 0) {
-  //     Alert.alert('Please enter your password!'); return;
-  //   }
-
-  //   //fetch email data
-  //   let urlCheckSignIn = "http://192.168.1.8:3001/Users?email=" + email;
-  //   fetch(urlCheckSignIn)
-  //     .then((res) => { return res.json(); })
-  //     .then(async (resSignIn) => {
-  //       if (resSignIn.length != 1) {
-  //         Alert.alert("Wrong email or same data");
-  //         return
-  //       } else {
-  //         //số  lượng được 1 bản ghi =>check pass
-  //         let objU = resSignIn[0];
-  //         if (objU.password != password) {
-  //           Alert.alert('Wrong password!');
-  //           return;
-  //         } else {
-  //           try {
-  //             await AsyncStorage.setItem('signInInfo', JSON.stringify(objU));
-  //             navigation.navigate('Home');
-  //             console.log('Home');
-
-  //           } catch (e) {
-  //             console.log(e);
-  //           }
-  //         }
-  //       }
-  //     })
-
-  // }
+  const [modalVisible, setModalVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [titleModal, setTitleModal] = useState('');
 
   const validateEmail = (email) => {
     const regEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return regEmail.test(String(email).toLowerCase());
   };
 
+  const showError = (title, message) => {
+    setTitleModal(title);
+    setErrorMessage(message);
+    setModalVisible(true);
+  };
+
   const doSignIn = async () => {
-    if (!email) {
-      Alert.alert('Validation Error', 'Email không được để trống');
+    if (email.length == 0 && password.length == 0) {
+      showError('Lỗi', 'Bạn chưa nhập email và mật khẩu!');
       return;
-    } else if (!validateEmail(email)) {
-      Alert.alert('Validation Error', 'Email không hợp lệ');
+    };
+    if (email.length == 0) {
+      showError('Lỗi', 'Bạn chưa nhập email!');
       return;
-    }
-    if (!password) {
-      Alert.alert('Validation Error', 'Mật khẩu không được để trống');
+    };
+    if (!validateEmail(email) && password.length == 0) {
+      showError('Lỗi', 'Sai định dạng email và chưa nhập mật khẩu!');
       return;
-    }
+    };
+    if (!validateEmail(email)) {
+      showError('Lỗi', 'Email không hợp lệ!');
+      return;
+    };
+    if (password.length == 0) {
+      showError('Lỗi', 'Bạn chưa nhập mật khẩu!');
+      return;
+    };
 
     try {
       const response = await fetch('https://665f14f81e9017dc16f2c14e.mockapi.io/Users');
       const data = await response.json();
 
-      const user = data.find((user) => user.email === email && user.password === password);
+      const user = data.find((user) => user.email === email);
 
-      if (user) {
-        navigation.navigate('Home');
+      if (!user) {
+        showError('Lỗi', 'Email không tồn tại!');
+        return;
+      } else if (user.password !== password) {
+        showError('Lỗi', 'Mật khẩu không đúng!');
+        return;
       } else {
-        Alert.alert('Login Failed', 'Email hoặc mật khẩu không đúng');
+        await AsyncStorage.setItem('user', JSON.stringify(user));
+        const userData = await AsyncStorage.getItem('user');
+        console.log('User data:', JSON.parse(userData));
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Home' }],
+          })
+        );
       }
     } catch (error) {
       console.error('Error during login:', error);
-      Alert.alert('Login Failed', 'Có lỗi xảy ra khi đăng nhập');
+      showError('Lỗi', 'Có lỗi xảy ra khi đăng nhập');
+      return;
     } finally {
     }
   }
@@ -119,8 +114,8 @@ const SignIn = () => {
                 <Text style={{ color: 'black' }}>Remember me?</Text>
               </View>
 
-              {/* <TouchableOpacity style={st.btnSignIn} onPress={() =>doSignIn()}> */}
-              <TouchableOpacity style={st.btnSignIn} onPress={() => navigation.navigate('Home')}>
+              <TouchableOpacity style={st.btnSignIn} onPress={() => doSignIn()}>
+                {/* <TouchableOpacity style={st.btnSignIn} onPress={() => navigation.navigate('Home')}> */}
                 <Text style={st.t_signIn}>Sign In</Text>
               </TouchableOpacity>
             </View>
@@ -139,6 +134,7 @@ const SignIn = () => {
           </ScrollView>
         </SafeAreaView>
       </KeyboardAvoidingView>
+      {modalVisible && <ErrorModal modalVisible={modalVisible} setModalVisible={setModalVisible} errorMessage={errorMessage} titleModal={titleModal} />}
     </ImageBackground>
 
 

@@ -8,10 +8,8 @@ import SignUp from './src/SignUp';
 import Home from './src/Home';
 import Welcome from './src/Welcome';
 import Main from './src/Main';
+import ErrorModal from './src/ErrorModal';
 import {name as appName} from './app.json';
 
-// AppRegistry.registerComponent(appName, () => Welcome);
-// AppRegistry.registerComponent(appName, () => SignIn);
-// AppRegistry.registerComponent(appName, () => SignUp);
-// AppRegistry.registerComponent(appName, () => Home);
+// AppRegistry.registerComponent(appName, () => ErrorModal);
 AppRegistry.registerComponent(appName, () => Main);

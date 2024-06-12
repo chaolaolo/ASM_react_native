@@ -100,7 +100,13 @@ const Home = () => {
 
   const addToCart = async (product) => {
     try {
-      const addProd_Quantity = { ...product, quantity:1 };
+      const user = await AsyncStorage.getItem('user');
+      if (!user) {
+        Alert.alert('Lỗi', 'Đăng  nhập trước khi thêm vào giỏ hàng!');
+        return;
+      }
+      const userData = JSON.parse(user);
+      const addProd_Quantity = { ...product, quantity:1 ,idUser:userData.id};
       const response = await fetch('https://666138f063e6a0189fe8ec69.mockapi.io/Cart', {
         method: 'POST',
         headers: {
@@ -121,12 +127,19 @@ const Home = () => {
 
   const addFaourite = async (product) => {
     try {
+      const user = await AsyncStorage.getItem('user');
+      if (!user) {
+        Alert.alert('Lỗi', 'Đăng  nhập trước khi thêm mục yêu thích!');
+        return;
+      }
+      const userData = JSON.parse(user);
+      const addIdUser = { ...product, idUser:userData.id};
       const response = await fetch('https://666138f063e6a0189fe8ec69.mockapi.io/Favourite', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(product)
+        body: JSON.stringify(addIdUser)
       });
       if (response.ok) {
         Alert.alert('Add To Favourite','Product added to favourite successfully!');
